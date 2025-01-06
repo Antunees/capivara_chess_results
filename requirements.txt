@@ -1,0 +1,12 @@
+pydantic-settings==2.5.2
+alembic==1.13.3
+fastapi==0.115.0
+passlib[bcrypt]
+uvicorn==0.30.6
+cryptography==43.0.1
+tenacity==9.0.0
+redis==5.1.0
+sqlmodel==0.0.22
+PyJWT==2.9.0
+psycopg[binary,pool]
+emails
