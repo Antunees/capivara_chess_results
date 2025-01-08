@@ -39,7 +39,7 @@ def upgrade() -> None:
             default=sa.text("CURRENT_TIMESTAMP"),
         ),
     )
-    op.create_index(op.f("ix_player_secret"), "player", ["secret"], unique=True)
+    op.create_index(op.f("ix_player_secret"), "player", ["secret"])
     op.create_index(op.f("ix_player_name"), "player", ["name"], unique=True)
 
 

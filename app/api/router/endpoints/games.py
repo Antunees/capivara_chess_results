@@ -41,7 +41,7 @@ def read_game(id: uuid.UUID) -> Any:
 
 
 @router.post("/", response_model=GamePublic)
-def create_game(
+def register_game(
     *, dbSession: dbSessionDep, game_in: GameCreate
 ) -> Any:
     """

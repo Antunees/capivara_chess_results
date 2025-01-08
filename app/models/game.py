@@ -21,7 +21,7 @@ from app.models.player import Player
 class GameBase(SQLModel):
     player_white: uuid.UUID | None = Field(default=None)
     player_black: uuid.UUID | None = Field(default=None)
-    player_winner: uuid.UUID | None = Field(default=None)
+    player_winner: uuid.UUID | None = Field(default='00000000-0000-0000-0000-000000000000')
     start_time: datetime | None = Field(default=None)
     end_time: datetime | None = Field(default=None)
 
@@ -30,7 +30,7 @@ class GameBase(SQLModel):
 class GameCreate(GameBase):
     player_white: uuid.UUID = Field(default=None)
     player_black: uuid.UUID = Field(default=None)
-    player_winner: uuid.UUID = Field(default=None)
+    player_winner: uuid.UUID = Field(default='00000000-0000-0000-0000-000000000000')
     start_time: datetime = Field(default=None)
     end_time: datetime = Field(default=None)
 

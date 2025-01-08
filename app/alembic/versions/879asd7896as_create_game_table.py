@@ -59,23 +59,23 @@ def upgrade() -> None:
         )
     )
 
-    op.alter_column("game", "player_white", existing_type=sa.UUID(), nullable=False)
-    op.drop_constraint("game_player_white_fkey", "game", type_="foreignkey")
-    op.create_foreign_key(
-        None, "game", "player", ["player_white"], ["id"], ondelete="CASCADE"
-    )
+    # op.alter_column("game", "player_white", existing_type=sa.UUID(), nullable=False)
+    # op.drop_constraint("game_player_white_fkey", "game", type_="foreignkey")
+    # op.create_foreign_key(
+    #     None, "game", "player", ["player_white"], ["id"], ondelete="CASCADE"
+    # )
 
-    op.alter_column("game", "player_black", existing_type=sa.UUID(), nullable=False)
-    op.drop_constraint("game_player_black_fkey", "game", type_="foreignkey")
-    op.create_foreign_key(
-        None, "game", "player", ["player_black"], ["id"], ondelete="CASCADE"
-    )
+    # op.alter_column("game", "player_black", existing_type=sa.UUID(), nullable=False)
+    # op.drop_constraint("game_player_black_fkey", "game", type_="foreignkey")
+    # op.create_foreign_key(
+    #     None, "game", "player", ["player_black"], ["id"], ondelete="CASCADE"
+    # )
 
-    op.alter_column("game", "player_winner", existing_type=sa.UUID(), nullable=False)
-    op.drop_constraint("game_player_winner_fkey", "game", type_="foreignkey")
-    op.create_foreign_key(
-        None, "game", "player", ["player_winner"], ["id"], ondelete="CASCADE"
-    )
+    # op.alter_column("game", "player_winner", existing_type=sa.UUID(), nullable=True)
+    # op.drop_constraint("game_player_winner_fkey", "game", type_="foreignkey")
+    # op.create_foreign_key(
+    #     None, "game", "player", ["player_winner"], ["id"], ondelete="CASCADE"
+    # )
 
 
 def downgrade() -> None:
