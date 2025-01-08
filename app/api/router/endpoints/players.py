@@ -48,6 +48,10 @@ def create_player(
     """
     Create new player.
     """
+    player = crud.broker.player.get_by_name(name=player_in.name)
+    if player:
+        raise HTTPException(status_code=403, detail="Player already exist")
+
     player_create = Player.model_validate(player_in)
 
     player = crud.db.player.create(

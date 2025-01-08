@@ -45,7 +45,7 @@ def create_game(
     *, dbSession: dbSessionDep, game_in: GameCreate
 ) -> Any:
     """
-    Create new game.
+    Register new game.
     """
     game_create = Game.model_validate(game_in)
 
