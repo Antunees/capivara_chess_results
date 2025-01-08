@@ -27,6 +27,9 @@ class BrokerBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
         Broker.set(key, json.dumps(as_dict, cls=DTEncoder))
 
+    def set_string_on_specific_key(self, *, key: str, text: str) -> None:
+        Broker.set(key, text)
+
     def get(self, id: int) -> Optional[ModelType]:
         try:
             obj_broker = json.loads(Broker.get(f"{self.tablename}:{id}"))
