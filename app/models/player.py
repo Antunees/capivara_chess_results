@@ -1,13 +1,12 @@
 import uuid
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, SQLModel
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
-from typing import ClassVar, List, Optional
-from sqlalchemy import Column, ForeignKey, String, Boolean, TIMESTAMP, text
-from sqlalchemy.dialects.postgresql import UUID
+from typing import ClassVar, List
+from sqlalchemy import Column, text
 from sqlalchemy.orm import relationship
 from sqlmodel import SQLModel, Field
 

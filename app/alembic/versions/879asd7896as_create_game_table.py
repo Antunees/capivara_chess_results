@@ -27,6 +27,7 @@ def upgrade() -> None:
             primary_key=True,
             default=sa.text("uuid_generate_v4()"),
         ),
+        sa.Column("result", sa.String(length=255), nullable=False),
         sa.Column("player_white", postgresql.UUID(as_uuid=True), nullable=False),
         sa.ForeignKeyConstraint(
             ["player_white"],

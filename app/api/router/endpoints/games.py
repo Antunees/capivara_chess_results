@@ -1,5 +1,9 @@
+import logging
+import os
 import uuid
 from typing import Any
+
+import jwt
 
 from fastapi import APIRouter, HTTPException
 
@@ -12,7 +16,10 @@ from app.models import (
     GamePublic,
     GamesPublic,
     GameUpdate,
+    RegisterGame,
 )
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 router = APIRouter()
 
@@ -42,12 +49,30 @@ def read_game(id: uuid.UUID) -> Any:
 
 @router.post("/", response_model=GamePublic)
 def register_game(
-    *, dbSession: dbSessionDep, game_in: GameCreate
+    *, dbSession: dbSessionDep, token_in: RegisterGame
 ) -> Any:
     """
     Register new game.
     """
+    match_info = jwt.decode(token_in.token, SECRET_KEY, algorithms=["HS256"])
+    game_in: GameCreate = GameCreate(
+        id = match_info['game_id'],
+        player_white = match_info['player_white'],
+        player_black = match_info['player_black'],
+        player_winner = match_info['player_winner'],
+        start_time = match_info['start_time'],
+        end_time = match_info['end_time'],
+        result = match_info['result'],
+    )
+
+    if match_info.get('player_winner'):
+        game_in.player_winner = match_info['player_winner']
     game_create = Game.model_validate(game_in)
+
+
+    game = crud.broker.game.get(id=game_in.id)
+    if game:
+        raise HTTPException(status_code=403, detail="Game already exist")
 
     game = crud.db.game.create(
         dbSession, obj_in=game_create
