@@ -27,6 +27,7 @@ class GameBase(SQLModel):
     start_time: datetime | None = Field(default=None)
     end_time: datetime | None = Field(default=None)
     result: Literal['checkmate', 'stalemate', 'insufficient material', '75-move rule', 'fivefold repetition'] | None = Field(max_length=255)
+    pgn_text: str | None = Field(default=None)
 
 
 class RegisterGame(BaseModel):
@@ -51,6 +52,7 @@ class GameCreate(GameBase):
     player_winner: uuid.UUID = Field(default='00000000-0000-0000-0000-000000000000')
     start_time: datetime = Field(default=None)
     end_time: datetime = Field(default=None)
+    pgn_text: str = Field(default=None)
     result: Literal['checkmate', 'stalemate', 'insufficient material', '75-move rule', 'fivefold repetition'] = Field(max_length=255)
 
 
@@ -64,6 +66,7 @@ class Game(GameBase, table=True):
     __tablename__ = "game"
     id: uuid.UUID = Field(default_factory=uuid.uuid4, sa_column=Column(PG_UUID(as_uuid=True), primary_key=True))
     result: str = Field(max_length=255)
+    pgn_text: str = Field()
     player_white: uuid.UUID = Field(sa_column=Column(PG_UUID(as_uuid=True), ForeignKey("player.id"), nullable=False))
     player_black: uuid.UUID = Field(sa_column=Column(PG_UUID(as_uuid=True), ForeignKey("player.id"), nullable=False))
     player_winner: uuid.UUID = Field(sa_column=Column(PG_UUID(as_uuid=True), ForeignKey("player.id"), nullable=False))

@@ -63,6 +63,7 @@ def register_game(
         start_time = match_info['start_time'],
         end_time = match_info['end_time'],
         result = match_info['result'],
+        pgn_text = match_info['pgn_text'],
     )
 
     if match_info.get('player_winner'):
