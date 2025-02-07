@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: str = ""
     REDIS_PORT: int = 0
 
+    MY_SECRET: str = ""
+
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:

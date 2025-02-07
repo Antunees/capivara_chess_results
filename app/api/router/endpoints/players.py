@@ -14,6 +14,7 @@ from app.models import (
     PlayerUpdate,
     PlayerPublicCreate,
 )
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -43,11 +44,14 @@ def read_player(id: uuid.UUID) -> Any:
 
 @router.post("/", response_model=PlayerPublicCreate)
 def create_player(
-    *, dbSession: dbSessionDep, player_in: PlayerCreate
+    *, dbSession: dbSessionDep, player_in: PlayerCreate, secret: str
 ) -> Any:
     """
     Create new player.
     """
+    if secret != settings.MY_SECRET:
+        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
+
     player = crud.broker.player.get_by_name(name=player_in.name)
     if player:
         raise HTTPException(status_code=403, detail="Player already exist")
@@ -66,10 +70,14 @@ def update_player(
     dbSession: dbSessionDep,
     id: uuid.UUID,
     player_in: PlayerUpdate,
+    secret: str,
 ) -> Any:
     """
     Update an player.
     """
+    if secret != settings.MY_SECRET:
+        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
+
     player = dbSession.get(Player, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")

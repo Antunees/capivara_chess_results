@@ -18,6 +18,7 @@ from app.models import (
     GameUpdate,
     RegisterGame,
 )
+from app.core.config import settings
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -49,11 +50,14 @@ def read_game(id: uuid.UUID) -> Any:
 
 @router.post("/", response_model=GamePublic)
 def register_game(
-    *, dbSession: dbSessionDep, token_in: RegisterGame
+    *, dbSession: dbSessionDep, token_in: RegisterGame, secret: str,
 ) -> Any:
     """
     Register new game.
     """
+    if secret != settings.MY_SECRET:
+        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
+
     match_info = jwt.decode(token_in.token, SECRET_KEY, algorithms=["HS256"])
     game_in: GameCreate = GameCreate(
         id = match_info['game_id'],
@@ -87,10 +91,14 @@ def update_game(
     dbSession: dbSessionDep,
     id: uuid.UUID,
     game_in: GameUpdate,
+    secret: str,
 ) -> Any:
     """
     Update an game.
     """
+    if secret != settings.MY_SECRET:
+        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
+
     game = dbSession.get(Game, id)
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
@@ -104,11 +112,14 @@ def update_game(
 
 @router.delete("/{id}")
 def delete_game(
-    dbSession: dbSessionDep, id: uuid.UUID
+    dbSession: dbSessionDep, id: uuid.UUID, secret: str,
 ) -> Message:
     """
     Delete an game.
     """
+    if secret != settings.MY_SECRET:
+        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
+
     game = dbSession.get(Game, id)
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
