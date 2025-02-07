@@ -70,17 +70,20 @@ def update_player(
     dbSession: dbSessionDep,
     id: uuid.UUID,
     player_in: PlayerUpdate,
-    secret: str,
+    secret_key: str
 ) -> Any:
     """
     Update an player.
     """
-    if secret != settings.MY_SECRET:
-        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
-
     player = dbSession.get(Player, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
+
+    if str(secret_key) != str(player.secret):
+        raise HTTPException(status_code=401, detail="Wrong secret or key")
+
+    if crud.broker.player.get_by_name(name=player_in.name):
+        raise HTTPException(status_code=403, detail="Name in use")
 
     player = crud.db.player.update(
         dbSession, db_obj=player, obj_in=player_in
@@ -91,11 +94,14 @@ def update_player(
 
 @router.delete("/{id}")
 def delete_player(
-    dbSession: dbSessionDep, id: uuid.UUID
+    dbSession: dbSessionDep, id: uuid.UUID, secret: str,
 ) -> Message:
     """
     Delete an player.
     """
+    if secret != settings.MY_SECRET:
+        raise HTTPException(status_code=401, detail="You shouldn't try this. Get out of here")
+
     player = dbSession.get(Player, id)
     if not player:
         raise HTTPException(status_code=404, detail="Player not found")
